@@ -11,8 +11,7 @@ token:
   refresh_token_expires: '1d'
 support:
   active: true
-  chat_id: '-1002263223006'
-  bot_token: '7222096847:AAENnJscBJgkHiJoBMGwSa-czuL9Simy-dE'
+
 dev:
   create: false
   full_name: 'Super Admin'

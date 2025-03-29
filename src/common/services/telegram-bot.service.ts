@@ -1,19 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable } from '@nestjs/common';
 import * as fs from 'node:fs';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import FormData from 'form-data';
 import { readFileSync } from 'fs';
+import { bot_config } from './config';
 
 @Injectable()
 export class TelegramBotService {
-  readonly chat_id: number;
-  readonly bot_token: string;
-  constructor(@Inject(ConfigService) private configService: ConfigService) {
-    this.chat_id = configService.get<number>('support.chat_id');
-    this.bot_token = configService.get<string>('support.bot_token');
-  }
+  readonly chat_id: string = bot_config.TELEGRAM_CHAT_ID;
+  readonly bot_token: string = bot_config.TELEGRAM_BOT_TOKEN;
 
   sendLog(path: string, fileName: string) {
     const date = dayjs().format('YYYY-MM-DD HH:mm:ss');
