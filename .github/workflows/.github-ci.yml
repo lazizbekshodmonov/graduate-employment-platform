@@ -1,0 +1,81 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Kodni yuklab olish
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Node.js ni sozlash
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Bog'liqliklarni o'rnatish
+      - name: Install dependencies
+        run: npm install
+
+      # Ilovani qurish
+      - name: Build application
+        run: npm run build
+
+      # SSH-ni sozlash
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      # VPS-ga joylashtirish
+      - name: Deploy to VPS
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: ${{ secrets.USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+            cd /var/www/graduate-employment-platform
+            git pull origin master
+            npm install
+            npm run build
+            pm2 restart graduate-employment-platform || pm2 start dist/main.js --name graduate-employment-platform
+          EOF
+
+      # Joylashtirishni tekshirish
+      - name: Verify Deployment
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: ${{ secrets.USER }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $USER@$HOST << EOF
+            pm2 show graduate-employment-platform
+          EOF
+          
+      # Muvaffaqiyatli joylashtirish haqida xabar
+      - name: Notify Success
+        if: success()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+            -d chat_id=${TELEGRAM_CHAT_ID} \
+            -d text="✅ Deployment successful! The project is up and running."
+
+      # Joylashtirish muvaffaqiyatsiz bo'lsa xabar
+      - name: Notify Failure
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
+            -d chat_id=${TELEGRAM_CHAT_ID} \
+            -d text="🚨 Deployment failed! Check the GitHub Actions logs for details."
