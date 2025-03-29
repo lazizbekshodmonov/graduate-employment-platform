@@ -1,0 +1,7 @@
+{
+  "USERNAME_OR_PASSWORD_INVALID_EXCEPTION": "Username or password is incorrect",
+  "USER_IS_BLOCKED_EXCEPTION": "User is blocked",
+  "INVALID_REFRESH_TOKEN": "{token} refresh token is expired or invalid",
+  "USER_ALREADY_EXIST_WIDTH_USERNAME_EXCEPTION": "{username} user already exists in the system",
+  "USER_NOT_FOUND_EXCEPTION": "User not found"
+}

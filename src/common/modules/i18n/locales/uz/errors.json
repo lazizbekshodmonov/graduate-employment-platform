@@ -1,0 +1,7 @@
+{
+  "USERNAME_OR_PASSWORD_INVALID_EXCEPTION": "Foydalanuvchi nomi yoki parol noto‘g‘ri",
+  "USER_IS_BLOCKED_EXCEPTION":  "Foydalanuvchi bloklangan",
+  "INVALID_REFRESH_TOKEN":  "{token} yangilash tokeni eskirgan yoki noto'g'ri",
+  "USER_ALREADY_EXIST_WIDTH_USERNAME_EXCEPTION":  "{username} foydalanuvchi tizimda mavjud",
+  "USER_NOT_FOUND_EXCEPTION": "Foydalanuvchi topilmadi"
+}

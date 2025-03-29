@@ -1,0 +1,23 @@
+http:
+  host: 'localhost'
+  port: 8080
+db:
+  postgres:
+    synchronize: true
+hash:
+  salt: 10
+token:
+  access_token_expires: '1h'
+  refresh_token_expires: '1d'
+support:
+  active: true
+  chat_id: '-1002263223006'
+  bot_token: '7222096847:AAENnJscBJgkHiJoBMGwSa-czuL9Simy-dE'
+dev:
+  create: false
+  full_name: 'Super Admin'
+  username: 'super_admin'
+  password: 'SuperAdmin#123'
+external_systems:
+  hemis_base_url: 'https://hstudent.nuu.uz'
+

@@ -1,0 +1,7 @@
+import { Resolver, ResolverFn } from 'nestjs-i18n';
+
+export class CustomHeaderResolver implements Resolver {
+  resolve: ResolverFn = (req) => {
+    return req.headers['hl'] || 'uz'; // Agar header bo‘lmasa, 'uz' ni qaytaradi
+  };
+}
