@@ -70,13 +70,7 @@ jobs:
             -d chat_id=${TELEGRAM_CHAT_ID} \
             -d text="✅ Deployment successful! The project is up and running."
 
-      # Joylashtirish muvaffaqiyatsiz bo'lsa xabar
-      - name: Check if TELEGRAM_BOT_TOKEN is set
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: echo "Token exists:${{ TELEGRAM_BOT_TOKEN }}"
-        
+      # Joylashtirish muvaffaqiyatsiz bo'lsa xabar  
       - name: Notify Failure
         if: failure()
         env:
