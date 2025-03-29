@@ -65,10 +65,16 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          START_TIME: ${{ github.event.workflow_run.created_at }}
         run: |
+          # Hisoblash
+          start_time=$(date -d "${START_TIME}" +%s)
+          end_time=$(date +%s)
+          duration=$((end_time - start_time))
+
           curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
             -d chat_id=${TELEGRAM_CHAT_ID} \
-            -d text="✅ Deployment successful! The project is up and running."
+            -d text="✅ CI: Build succeeded in ${duration} seconds."
 
       # Joylashtirish muvaffaqiyatsiz bo'lsa xabar  
       - name: Notify Failure
@@ -76,7 +82,13 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          START_TIME: ${{ github.event.workflow_run.created_at }}
         run: |
+          # Hisoblash
+          start_time=$(date -d "${START_TIME}" +%s)
+          end_time=$(date +%s)
+          duration=$((end_time - start_time))
+
           curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
             -d chat_id=${TELEGRAM_CHAT_ID} \
-            -d text="🚨 Deployment failed! Check the GitHub Actions logs for details."
+            -d text="‼️ CI: Build failed in ${duration} seconds."
