@@ -73,7 +73,7 @@ jobs:
       # Joylashtirish muvaffaqiyatsiz bo'lsa xabar
       - name: Check if TELEGRAM_BOT_TOKEN is set
         run: echo "Token exists:-${{ secrets.TELEGRAM_BOT_TOKEN }}"
-        if: ${{ secrets.TELEGRAM_BOT_TOKEN != '' }}
+        if: ${{ $secrets.TELEGRAM_BOT_TOKEN != '' }}
       - name: Notify Failure
         if: failure()
         env:
