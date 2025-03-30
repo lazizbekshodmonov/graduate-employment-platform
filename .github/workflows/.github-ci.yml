@@ -29,6 +29,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
       - name: Debugging Environment Variables
+        env:
+          HOST: ${{ secrets.HOST }}
+          USER: ${{ secrets.USER }}
         run: echo "Host:$HOST, User:$USER"
       - name: Connect to server
         run: ssh -o StrictHostKeyChecking=no root@$HOST "echo Connection Successful"
