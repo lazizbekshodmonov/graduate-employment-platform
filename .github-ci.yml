@@ -10,31 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Kodni yuklab olish
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Node.js ni sozlash
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # Bog'liqliklarni o'rnatish
       - name: Install dependencies
         run: npm install
 
-      # Ilovani qurish
       - name: Build application
         run: npm run build
 
-      # SSH-ni sozlash
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-      # VPS-ga joylashtirish
       - name: Deploy to VPS
         env:
           HOST: ${{ secrets.HOST }}
@@ -48,7 +42,6 @@ jobs:
             pm2 restart graduate-employment-platform || pm2 start dist/main.js --name graduate-employment-platform
           EOF
 
-      # Joylashtirishni tekshirish
       - name: Verify Deployment
         env:
           HOST: ${{ secrets.HOST }}
@@ -58,8 +51,6 @@ jobs:
             pm2 show graduate-employment-platform
           EOF
           
-      # Muvaffaqiyatli joylashtirish haqida xabar
-      
       - name: Notify Success
         if: success()
         env:
@@ -67,7 +58,6 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           START_TIME: ${{ github.event.workflow_run.created_at }}
         run: |
-          # Hisoblash
           start_time=$(date -d "${START_TIME}" +%s)
           end_time=$(date +%s)
           duration=$((end_time - start_time))
@@ -76,7 +66,6 @@ jobs:
             -d chat_id=${TELEGRAM_CHAT_ID} \
             -d text="✅ CI: Build succeeded in ${duration} seconds."
 
-      # Joylashtirish muvaffaqiyatsiz bo'lsa xabar  
       - name: Notify Failure
         if: failure()
         env:
@@ -84,7 +73,6 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           START_TIME: ${{ github.event.workflow_run.created_at }}
         run: |
-          # Hisoblash
           start_time=$(date -d "${START_TIME}" +%s)
           end_time=$(date +%s)
           duration=$((end_time - start_time))
