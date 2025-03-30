@@ -30,6 +30,8 @@ jobs:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
           
       - name: Add known hosts
+        env:
+          HOST: ${{ secrets.HOST }}
         run: ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
         
       - name: Deploy to VPS
