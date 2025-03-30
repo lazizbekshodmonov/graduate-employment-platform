@@ -17,6 +17,7 @@ dev:
   full_name: 'Super Admin'
   username: 'super_admin'
   password: 'SuperAdmin#123'
+
 external_systems:
   hemis_base_url: 'https://hstudent.nuu.uz'
 
