@@ -28,7 +28,7 @@ import { db_config } from './config';
         user: db_config.MONGO_USERNAME,
         pass: db_config.MONGO_PASSWORD,
         dbName: db_config.MONGO_DBNAME,
-        authSource: 'admin',
+        authSource: db_config.MONGO_DBNAME,
       }),
     }),
   ],
