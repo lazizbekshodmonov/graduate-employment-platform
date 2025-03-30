@@ -29,6 +29,9 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
           
+      - name: Connect to server
+        run: ssh -o StrictHostKeyChecking=no root@$HOST "echo Connection Successful"
+        
       - name: Add known hosts
         env:
           HOST: ${{ secrets.HOST }}
