@@ -28,7 +28,8 @@ jobs:
         uses: webfactory/ssh-agent@v0.7.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
-          
+      - name: Debugging Environment Variables
+        run: echo "Host:$HOST, User:$USER"
       - name: Connect to server
         run: ssh -o StrictHostKeyChecking=no root@$HOST "echo Connection Successful"
         
