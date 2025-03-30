@@ -38,7 +38,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1');
   const configService = app.get(ConfigService);
   const port = configService.get<number>('http.port', 3000);
-  app.listen(port).then(() => {
+  app.listen(port, '0.0.0.0').then(() => {
     console.log(`Server started on port ${port}`);
   });
 }
