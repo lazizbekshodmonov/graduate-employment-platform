@@ -11,4 +11,6 @@ export const db_config = {
   POSTGRES_PORT: process.env.POSTGRES_PORT ? +process.env.POSTGRES_PORT : 5432,
   MONGO_URL: process.env.MONGO_URL,
   MONGO_DBNAME: process.env.MONGO_DBNAME,
+  MONGO_USERNAME: 'admin',
+  MONGO_PASSWORD: '4yASqr76sv',
 };

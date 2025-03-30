@@ -25,7 +25,10 @@ import { db_config } from './config';
     MongooseModule.forRootAsync({
       useFactory: async () => ({
         uri: db_config.MONGO_URL,
+        user: db_config.MONGO_USERNAME,
+        pass: db_config.MONGO_PASSWORD,
         dbName: db_config.MONGO_DBNAME,
+        authSource: 'admin',
       }),
     }),
   ],
