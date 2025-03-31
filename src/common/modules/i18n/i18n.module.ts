@@ -2,13 +2,14 @@ import { join } from 'path';
 import { ExecutionContext, Module } from '@nestjs/common';
 import { HeaderResolver, I18nJsonLoader, I18nModule } from 'nestjs-i18n';
 
+console.log(join(__dirname, 'locales'));
 @Module({
   imports: [
     I18nModule.forRoot({
       fallbackLanguage: 'uz',
       loader: I18nJsonLoader,
       loaderOptions: {
-        path: '../locales',
+        path: join(__dirname, 'locales'),
         watch: true,
       },
       resolvers: [
