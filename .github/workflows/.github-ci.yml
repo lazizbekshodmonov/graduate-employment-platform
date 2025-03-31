@@ -49,8 +49,9 @@ jobs:
             cd /var/www/graduate-employment-platform
             git pull origin master
             npm install
+            pm2 stop graduate-employment-platform
             npm run build
-            pm2 restart graduate-employment-platform || pm2 start dist/main.js --name graduate-employment-platform
+            pm2 start graduate-employment-platform || pm2 start dist/main.js --name graduate-employment-platform
           EOF
 
       - name: Verify Deployment
