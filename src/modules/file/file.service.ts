@@ -44,6 +44,10 @@ export class FileService {
       const configUploadPath =
         this.configService.get<string>('file.upload_path');
 
+      if (!fs.existsSync(configUploadPath)) {
+        fs.mkdirSync(configUploadPath, { recursive: true });
+      }
+
       const path = join(configUploadPath, cleanedName);
 
       fs.writeFileSync(path, file.buffer);
