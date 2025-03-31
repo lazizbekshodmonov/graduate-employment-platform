@@ -8,7 +8,7 @@ import { HeaderResolver, I18nJsonLoader, I18nModule } from 'nestjs-i18n';
       fallbackLanguage: 'uz',
       loader: I18nJsonLoader,
       loaderOptions: {
-        path: join(__dirname, 'locales'),
+        path: '../locales',
         watch: true,
       },
       resolvers: [
