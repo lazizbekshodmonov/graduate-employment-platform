@@ -4,6 +4,8 @@ import { IEmployerEntity } from './employer.interface';
 import { EmployerStatusEnum } from './employer.enum';
 import { UserEntity } from '../users/user.entity';
 import { IUserEntity } from '../users/user.interface';
+import { FileEntity } from '../file/file.entity';
+import { IFileEntity } from '../file/file.interface';
 
 @Entity('employer')
 export class EmployerEntity extends BaseEntity implements IEmployerEntity {
@@ -32,6 +34,10 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
     nullable: false,
   })
   status: EmployerStatusEnum;
+
+  @OneToOne(() => FileEntity)
+  @JoinColumn({ name: 'logo', referencedColumnName: 'hashId' })
+  file: IFileEntity;
 
   @OneToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })

@@ -16,6 +16,7 @@ import { VacancyModule } from './modules/vacancy/vacancy.module';
 import { StudentModule } from './modules/student/student.module';
 import { ApplicationModule } from './modules/application/application.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { FileModule } from './modules/file/file.module';
 
 @Injectable()
 export class BuildLogger extends Logger {
@@ -40,6 +41,7 @@ export class BuildLogger extends Logger {
     StudentModule,
     ApplicationModule,
     AdminModule,
+    FileModule,
   ],
   providers: [
     {

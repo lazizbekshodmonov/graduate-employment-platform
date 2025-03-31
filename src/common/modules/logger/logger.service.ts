@@ -37,7 +37,6 @@ export class CustomLoggerService implements LoggerService {
   }
   private logInternalServerError(error: any) {
     const botActive = this.configService.get<boolean>('support.active');
-    console.log(botActive);
     this.logger.error(`${error.name}\n ${error?.stack}`);
     const errorFileName = `error-${Date.now()}.txt`;
     const errorMessage = `Error: ${error.name}\n ${error?.stack}`;
@@ -63,7 +62,6 @@ export class CustomLoggerService implements LoggerService {
   error(error: Error) {
     if (error instanceof HttpException) {
       const status = error.getStatus();
-      console.log('Logger Service: ', status);
       if (status >= 400 && status < 500) {
         throw error;
       } else {

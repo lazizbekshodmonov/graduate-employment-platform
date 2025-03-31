@@ -6,12 +6,14 @@ db:
     synchronize: true
 hash:
   salt: 10
+  file_salt: 'U12Dwci01lqE'
 token:
   access_token_expires: '1h'
   refresh_token_expires: '1d'
 support:
   active: true
-
+file:
+  upload_path: './uploads'
 dev:
   create: false
   full_name: 'Super Admin'
