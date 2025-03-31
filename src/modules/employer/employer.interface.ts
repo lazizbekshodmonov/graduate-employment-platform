@@ -2,6 +2,7 @@ import { IBaseEntity } from '../../common/interfaces/base.interface';
 import { EmployerStatusEnum } from './employer.enum';
 import { IUserEntity } from '../users/user.interface';
 import { QueryRunner } from 'typeorm';
+import { IFileEntity } from '../file/file.interface';
 
 export interface IEmployerRepository {
   getByUserId(id: number): Promise<IEmployerEntity>;
@@ -27,6 +28,7 @@ export interface IEmployerEntity extends IBaseEntity {
   phone: string;
   email: string;
   status: EmployerStatusEnum;
+  file: IFileEntity;
   user: IUserEntity;
 }
 
