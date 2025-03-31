@@ -13,7 +13,7 @@ support:
   active: true
 
 dev:
-  create: true
+  create: false
   full_name: 'Super Admin'
   username: 'super_admin'
   password: 'SuperAdmin#123'
