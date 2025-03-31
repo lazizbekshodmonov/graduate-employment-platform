@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { Token } from './token.schema';
 import { v4 as uuidv4 } from 'uuid';
 import { TokenType } from './token.enum';
@@ -11,7 +12,7 @@ import { ITokenSchema } from '../../../modules/auth/auth.interface';
 import { UserRoleEnum } from '../../../modules/users/user.enum';
 import { ParseDuration } from './token.type';
 import { DeleteResult } from 'mongodb';
-
+dayjs.extend(utc);
 @Injectable()
 export class TokenService {
   constructor(
@@ -56,6 +57,7 @@ export class TokenService {
     const tokenDuration = this.parseDuration(expiresTime);
     const tokenExpiresAt = dayjs()
       .add(tokenDuration.value, tokenDuration.unit)
+      .utc()
       .toDate();
     const uuid = uuidv4();
     return await new this.tokenModel({
