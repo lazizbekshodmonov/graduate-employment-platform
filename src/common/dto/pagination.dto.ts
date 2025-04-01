@@ -1,4 +1,6 @@
-export class Pagination<T> {
+import { IPagination } from '../interfaces/pagination.interface';
+
+export class Pagination<T> implements IPagination<T> {
   readonly content: T[];
   readonly page: number;
   readonly size: number;

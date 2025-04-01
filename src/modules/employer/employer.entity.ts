@@ -1,7 +1,14 @@
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
-import { IEmployerEntity } from './employer.interface';
-import { EmployerStatusEnum } from './employer.enum';
+import { IEmployerEntity, ISocialLinkEntity } from './employer.interface';
+import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
 import { UserEntity } from '../users/user.entity';
 import { IUserEntity } from '../users/user.interface';
 import { FileEntity } from '../file/file.entity';
@@ -27,6 +34,9 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
   @Column({ type: 'varchar', length: 255 })
   email: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  businessType?: string;
+
   @Column({
     type: 'enum',
     enum: EmployerStatusEnum,
@@ -35,6 +45,13 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
   })
   status: EmployerStatusEnum;
 
+  @OneToMany(
+    () => SocialLinkEntity,
+    (entity: ISocialLinkEntity) => entity.employer,
+    { cascade: true },
+  )
+  socialLinks: ISocialLinkEntity[];
+
   @OneToOne(() => FileEntity)
   @JoinColumn({ name: 'logo', referencedColumnName: 'hashId' })
   file: IFileEntity;
@@ -42,4 +59,26 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
   @OneToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })
   user: IUserEntity;
+}
+
+@Entity('social-link')
+export class SocialLinkEntity extends BaseEntity implements ISocialLinkEntity {
+  @Column({
+    type: 'enum',
+    enum: SocialTypeEnum,
+    enumName: 'social_type_enum',
+    nullable: false,
+  })
+  type: SocialTypeEnum;
+
+  @Column({ type: 'varchar', length: 500 })
+  link: string;
+
+  @ManyToOne(
+    () => EmployerEntity,
+    (entity: IEmployerEntity) => entity.socialLinks,
+    { onDelete: 'CASCADE' },
+  )
+  @JoinColumn({ name: 'employer_id' })
+  employer: IEmployerEntity;
 }

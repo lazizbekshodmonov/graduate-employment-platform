@@ -10,6 +10,10 @@ import * as fs from 'node:fs';
 import { FileResponseDto } from './file.dto';
 import { CustomLoggerService } from '../../common/modules/logger/logger.service';
 import { ConfigService } from '@nestjs/config';
+import {
+  FileNotFoundException,
+  FileNotUploadedException,
+} from '../../common/exceptions/file.exception';
 
 @Injectable()
 export class FileService {
@@ -22,7 +26,7 @@ export class FileService {
   async uploadFile(file: Express.Multer.File) {
     try {
       if (!file) {
-        throw new BadRequestException('Fayl yuklanmadi');
+        throw new FileNotUploadedException();
       }
 
       const existingFile = await this.fileRepository.findByOriginalNameAndSize(
@@ -75,7 +79,7 @@ export class FileService {
       const file = await this.fileRepository.findByHashId(hashId);
 
       if (!file) {
-        throw new NotFoundException('Fayl topilmadi');
+        throw new FileNotFoundException();
       }
 
       const filePath = join(process.cwd(), file.path);
@@ -84,6 +88,7 @@ export class FileService {
       return new StreamableFile(fileStream, {
         disposition: `attachment; filename="${file.originalName}"`,
         type: file.mimetype,
+        length: file.size,
       });
     } catch (error) {
       this.logger.error(error);

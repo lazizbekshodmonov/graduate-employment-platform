@@ -1,19 +1,27 @@
 import {
   IEmployerCreateRequestDto,
   IEmployerEntity,
-  IEmployerResponse,
+  IEmployerResponseDto,
+  ISocialLinkCreateRequestDto,
+  ISocialLinkEntity,
+  ISocialLinkResponseDto,
 } from './employer.interface';
 import {
+  IsArray,
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
+  IsUrl,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
-import { EmployerStatusEnum } from './employer.enum';
+import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
+import { Type } from 'class-transformer';
 
-export class EmployerResponseDto implements IEmployerResponse {
+export class EmployerResponseDto implements IEmployerResponseDto {
   readonly id: number;
   readonly companyName: string;
   readonly description: string;
@@ -22,8 +30,10 @@ export class EmployerResponseDto implements IEmployerResponse {
   readonly contactPerson: string;
   readonly phone: string;
   readonly email: string;
+  readonly username: string;
   readonly status: EmployerStatusEnum;
-  constructor(employer?: IEmployerEntity) {
+  readonly social_links: ISocialLinkResponseDto[];
+  constructor(employer: IEmployerEntity) {
     this.id = employer.id;
     this.companyName = employer.companyName;
     this.description = employer.description;
@@ -32,6 +42,25 @@ export class EmployerResponseDto implements IEmployerResponse {
     this.phone = employer.phone;
     this.email = employer.email;
     this.status = employer.status;
+    if (employer?.user) {
+      this.username = employer.user.username;
+    }
+    if (employer?.socialLinks) {
+      this.social_links = employer.socialLinks.map(
+        (item) => new SocialLinkResponseDto(item),
+      );
+    }
+  }
+}
+
+export class SocialLinkResponseDto implements ISocialLinkResponseDto {
+  id: number;
+  type: SocialTypeEnum;
+  link: string;
+  constructor(socialLink: ISocialLinkEntity) {
+    this.id = socialLink.id;
+    this.type = socialLink.type;
+    this.link = socialLink.link;
   }
 }
 
@@ -85,4 +114,22 @@ export class EmployerCreateRequestDto implements IEmployerCreateRequestDto {
   @IsNotEmpty()
   @IsEnum(EmployerStatusEnum)
   status: EmployerStatusEnum;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SocialLinkCreateRequestDto)
+  social_links: SocialLinkCreateRequestDto[];
+}
+
+export class SocialLinkCreateRequestDto implements ISocialLinkCreateRequestDto {
+  @IsNotEmpty()
+  @IsEnum(SocialTypeEnum)
+  type: SocialTypeEnum;
+
+  @IsNotEmpty()
+  @IsString()
+  @IsUrl()
+  @MaxLength(500)
+  link: string;
 }

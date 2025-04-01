@@ -1,6 +1,6 @@
 import { IBaseEntity } from '../../common/interfaces/base.interface';
 import { UserRoleEnum, UserStatusEnum } from './user.enum';
-import { IEmployerResponse } from '../employer/employer.interface';
+import { IEmployerResponseDto } from '../employer/employer.interface';
 import { IStudentResponse } from '../student/student.interface';
 import { QueryRunner } from 'typeorm';
 
@@ -25,13 +25,13 @@ export interface IUserResponse {
   username: string;
   status: UserStatusEnum;
   role: UserRoleEnum;
-  employer?: IEmployerResponse;
+  employer?: IEmployerResponseDto;
   student?: IStudentResponse;
 }
 
 export interface IUserRepository {
-  getById(id: number): Promise<IUserEntity>;
-  getByUserName(userName: string): Promise<IUserEntity>;
+  findById(id: number): Promise<IUserEntity>;
+  findByUserName(userName: string): Promise<IUserEntity>;
   createUser(
     fullName: string,
     username: string,

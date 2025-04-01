@@ -3,5 +3,10 @@
   "USER_IS_BLOCKED_EXCEPTION":  "Foydalanuvchi bloklangan",
   "INVALID_REFRESH_TOKEN":  "{token} yangilash tokeni eskirgan yoki noto'g'ri",
   "USER_ALREADY_EXIST_WIDTH_USERNAME_EXCEPTION":  "{username} foydalanuvchi tizimda mavjud",
-  "USER_NOT_FOUND_EXCEPTION": "Foydalanuvchi topilmadi"
+  "USER_NOT_FOUND_EXCEPTION": "Foydalanuvchi topilmadi",
+  "FILE_NOT_UPLOADED": "Fayl yuklanmadi",
+  "FILE_NOT_FOUND": "Fayl topilmadi",
+  "SOCIAL_LINK_ALREADY_EXIST_EXCEPTION": "{type} link allaqachon mavjud",
+  "EMPLOYER_ALREADY_EXIST_EXCEPTION": "Ish beruvchi allaqachon mavjud",
+  "EMPLOYER_NOT_FOUND_EXCEPTION": "Ish beruvchi topilmadi"
 }

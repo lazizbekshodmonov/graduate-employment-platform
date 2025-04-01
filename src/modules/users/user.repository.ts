@@ -11,10 +11,10 @@ export class UserRepository implements IUserRepository {
   constructor(private readonly dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(UserEntity);
   }
-  getById(id: number): Promise<IUserEntity> {
+  findById(id: number): Promise<IUserEntity> {
     return this.repository.findOne({ where: { id: id } });
   }
-  getByUserName(userName: string): Promise<IUserEntity> {
+  findByUserName(userName: string): Promise<IUserEntity> {
     return this.repository.findOne({ where: { username: userName } });
   }
   createUser(
