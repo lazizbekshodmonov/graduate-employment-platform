@@ -91,16 +91,20 @@ export class EmployerService {
     search?: string,
     status?: EmployerStatusEnum,
   ): Promise<IPagination<IEmployerResponseDto>> {
-    const employers = await this.employerRepository.findByFilterAndPaginate(
-      page,
-      size,
-      search,
-      status,
-    );
-    const mappedData = employers.data.map(
-      (employer) => new EmployerResponseDto(employer),
-    );
-    return new Pagination(mappedData, page, size, employers.total);
+    try {
+      const employers = await this.employerRepository.findByFilterAndPaginate(
+        page,
+        size,
+        search,
+        status,
+      );
+      const mappedData = employers.data.map(
+        (employer) => new EmployerResponseDto(employer),
+      );
+      return new Pagination(mappedData, page, size, employers.total);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   async getEmployerById(id: number): Promise<IEmployerResponseDto> {
