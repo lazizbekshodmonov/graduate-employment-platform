@@ -3,5 +3,10 @@
   "USER_IS_BLOCKED_EXCEPTION": "User is blocked",
   "INVALID_REFRESH_TOKEN": "{token} refresh token is expired or invalid",
   "USER_ALREADY_EXIST_WIDTH_USERNAME_EXCEPTION": "{username} user already exists in the system",
-  "USER_NOT_FOUND_EXCEPTION": "User not found"
+  "USER_NOT_FOUND_EXCEPTION": "User not found",
+  "FILE_NOT_UPLOADED": "File not uploaded",
+  "FILE_NOT_FOUND": "File not found",
+  "SOCIAL_LINK_ALREADY_EXIST_EXCEPTION": "{type} link already exists",
+  "EMPLOYER_ALREADY_EXIST_EXCEPTION": "Employer already exist",
+  "EMPLOYER_NOT_FOUND_EXCEPTION": "Employer not found"
 }

@@ -10,7 +10,7 @@ import { UserRoleEnum, UserStatusEnum } from './user.enum';
 import { IUserEntity, IUserResponse } from './user.interface';
 import {
   IEmployerEntity,
-  IEmployerResponse,
+  IEmployerResponseDto,
 } from '../employer/employer.interface';
 import { IStudentEntity, IStudentResponse } from '../student/student.interface';
 import { EmployerResponseDto } from '../employer/employer.dto';
@@ -64,7 +64,7 @@ export class UserResponseDto implements IUserResponse {
   readonly role: UserRoleEnum;
   readonly status: UserStatusEnum;
   readonly student?: IStudentResponse;
-  readonly employer?: IEmployerResponse;
+  readonly employer?: IEmployerResponseDto;
   constructor(
     user: IUserEntity,
     employer?: IEmployerEntity,

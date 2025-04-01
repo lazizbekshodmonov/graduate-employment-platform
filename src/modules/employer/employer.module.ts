@@ -3,7 +3,10 @@ import { EmployerService } from './employer.service';
 import { EmployerController } from './employer.controller';
 import { EmployerEntity } from './employer.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { EmployerRepository } from './employer.repository';
+import {
+  EmployerRepository,
+  SocialLinkRepository,
+} from './employer.repository';
 import { UserRepository } from '../users/user.repository';
 import { StudentRepository } from '../student/student.repository';
 import { PasswordService } from '../../common/services/password.service';
@@ -14,6 +17,7 @@ import { PasswordService } from '../../common/services/password.service';
   providers: [
     EmployerService,
     EmployerRepository,
+    SocialLinkRepository,
     UserRepository,
     StudentRepository,
     PasswordService,

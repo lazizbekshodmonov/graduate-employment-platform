@@ -1,23 +1,46 @@
 import { IBaseEntity } from '../../common/interfaces/base.interface';
-import { EmployerStatusEnum } from './employer.enum';
+import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
 import { IUserEntity } from '../users/user.interface';
 import { QueryRunner } from 'typeorm';
 import { IFileEntity } from '../file/file.interface';
 
 export interface IEmployerRepository {
-  getByUserId(id: number): Promise<IEmployerEntity>;
   createEmployer(
     companyName: string,
     description: string,
     industry: string,
     address: string,
-    contactPerson: string,
     phone: string,
     email: string,
     user_id: number,
     status: EmployerStatusEnum,
     queryRunner: QueryRunner,
   ): Promise<IEmployerEntity>;
+
+  findByUserId(id: number): Promise<IEmployerEntity>;
+
+  findById(id: number, relations: string[]): Promise<IEmployerEntity>;
+
+  findByFilterAndPaginate(
+    page: number,
+    limit: number,
+    search?: string,
+    status?: EmployerStatusEnum,
+  ): Promise<{ data: IEmployerEntity[]; total: number }>;
+}
+
+export interface ISocialLinkRepository {
+  findByEmployerIdAndType(
+    employerId: number,
+    type: SocialTypeEnum,
+  ): Promise<ISocialLinkEntity>;
+
+  createSocialLink(
+    type: SocialTypeEnum,
+    link: string,
+    employer: IEmployerEntity,
+    queryRunner: QueryRunner,
+  ): Promise<ISocialLinkEntity>;
 }
 
 export interface IEmployerEntity extends IBaseEntity {
@@ -27,12 +50,18 @@ export interface IEmployerEntity extends IBaseEntity {
   address: string;
   phone: string;
   email: string;
+  businessType?: string;
+  socialLinks: ISocialLinkEntity[];
   status: EmployerStatusEnum;
   file: IFileEntity;
   user: IUserEntity;
 }
-
-export interface IEmployerResponse {
+export interface ISocialLinkEntity extends IBaseEntity {
+  type: SocialTypeEnum;
+  link: string;
+  employer: IEmployerEntity;
+}
+export interface IEmployerResponseDto {
   id: number;
   companyName: string;
   description: string;
@@ -41,7 +70,15 @@ export interface IEmployerResponse {
   contactPerson: string;
   phone: string;
   email: string;
+  username: string;
   status: EmployerStatusEnum;
+  social_links: ISocialLinkResponseDto[];
+}
+
+export interface ISocialLinkResponseDto {
+  id: number;
+  type: SocialTypeEnum;
+  link: string;
 }
 
 export interface IEmployerCreateRequestDto {
@@ -51,8 +88,13 @@ export interface IEmployerCreateRequestDto {
   description: string;
   industry: string;
   address: string;
-  contactPerson: string;
   phone: string;
   email: string;
   status: EmployerStatusEnum;
+  social_links: ISocialLinkCreateRequestDto[];
+}
+
+export interface ISocialLinkCreateRequestDto {
+  type: SocialTypeEnum;
+  link: string;
 }

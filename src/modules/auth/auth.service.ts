@@ -29,7 +29,7 @@ export class AuthService {
   ) {}
   async getToken(authDto: AuthLoginRequest) {
     try {
-      const user: UserEntity = await this.userRepository.getByUserName(
+      const user: UserEntity = await this.userRepository.findByUserName(
         authDto.username,
       );
       if (!user) {
@@ -54,7 +54,7 @@ export class AuthService {
         student = await this.studentRepository.getByUserId(user.id);
       }
       if (user.role === UserRoleEnum.EMPLOYER) {
-        employer = await this.employerRepository.getByUserId(user.id);
+        employer = await this.employerRepository.findByUserId(user.id);
       }
       const accessToken = await this.tokenService.createAccessToken(
         user.id,
@@ -85,7 +85,7 @@ export class AuthService {
       if (!refreshToken) {
         throw new InvalidRefreshTokenException(authDto.refresh_token);
       }
-      const user = await this.userRepository.getById(refreshToken.userId);
+      const user = await this.userRepository.findById(refreshToken.userId);
 
       if (!user || user?.status !== UserStatusEnum.ACTIVE) {
         throw new InvalidRefreshTokenException(authDto.refresh_token);
@@ -97,7 +97,7 @@ export class AuthService {
         student = await this.studentRepository.getByUserId(user.id);
       }
       if (user.role === UserRoleEnum.EMPLOYER) {
-        employer = await this.employerRepository.getByUserId(user.id);
+        employer = await this.employerRepository.findByUserId(user.id);
       }
 
       const newAccessToken = await this.tokenService.createAccessToken(

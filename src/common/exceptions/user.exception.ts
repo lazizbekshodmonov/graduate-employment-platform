@@ -1,8 +1,7 @@
 import { BaseException } from './base.exception';
 import { ErrorsEnum } from '../enums/errors';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
-@Injectable()
 export class UserAlreadyExistsException extends BaseException {
   constructor(username: string) {
     super(
@@ -12,7 +11,6 @@ export class UserAlreadyExistsException extends BaseException {
     );
   }
 }
-@Injectable()
 export class UserNotFoundException extends BaseException {
   constructor() {
     super(ErrorsEnum.USER_NOT_FOUND_EXCEPTION, HttpStatus.BAD_REQUEST);

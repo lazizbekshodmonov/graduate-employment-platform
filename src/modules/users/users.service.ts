@@ -30,7 +30,7 @@ export class UsersService {
       const full_name = this.configService.get<string>('dev.full_name');
       const username = this.configService.get<string>('dev.username');
       const password = this.configService.get<string>('dev.password');
-      const user = await this.userRepository.getByUserName(username);
+      const user = await this.userRepository.findByUserName(username);
       if (user) {
         throw new UserAlreadyExistsException(username);
       }
@@ -49,7 +49,7 @@ export class UsersService {
   }
   async findById(id: number): Promise<IUserResponse> {
     try {
-      const user = await this.userRepository.getById(id);
+      const user = await this.userRepository.findById(id);
       if (!user) {
         throw new UserNotFoundException();
       }
@@ -60,7 +60,7 @@ export class UsersService {
         student = await this.studentRepository.getByUserId(user.id);
       }
       if (user.role === UserRoleEnum.EMPLOYER) {
-        employer = await this.employerRepository.getByUserId(user.id);
+        employer = await this.employerRepository.findByUserId(user.id);
       }
       return new UserResponseDto(user, employer, student);
     } catch (error) {
