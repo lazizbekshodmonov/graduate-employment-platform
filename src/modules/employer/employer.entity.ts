@@ -37,6 +37,30 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
   @Column({ type: 'varchar', length: 255, nullable: true })
   businessType?: string;
 
+  @Column({ type: 'date', nullable: true })
+  establishedDate?: Date;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  contactPersonName?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  contactPerson?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  contactPosition?: string;
+
+  @Column({ type: 'integer', nullable: true })
+  numberOfEmployees?: number;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  country?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  city?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  zipCode?: string;
+
   @Column({
     type: 'enum',
     enum: EmployerStatusEnum,
@@ -54,7 +78,7 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
 
   @OneToOne(() => FileEntity)
   @JoinColumn({ name: 'logo', referencedColumnName: 'hashId' })
-  file: IFileEntity;
+  file?: IFileEntity;
 
   @OneToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })

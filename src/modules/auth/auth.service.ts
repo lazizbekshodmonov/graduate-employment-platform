@@ -10,7 +10,7 @@ import {
   InvalidRefreshTokenException,
   UserIsBlockedException,
   UsernameOrPasswordInvalidException,
-} from '../../common/exceptions/auth.exception';
+} from './auth.exception';
 import { UserRepository } from '../users/user.repository';
 import { IStudentEntity } from '../student/student.interface';
 import { StudentRepository } from '../student/student.repository';

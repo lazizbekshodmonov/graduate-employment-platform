@@ -4,12 +4,14 @@ import {
   Injectable,
   InternalServerErrorException,
   LoggerService,
+  ValidationError,
 } from '@nestjs/common';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { TelegramBotService } from '../../services/telegram-bot.service';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import * as util from 'util';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -60,6 +62,9 @@ export class CustomLoggerService implements LoggerService {
     throw new InternalServerErrorException();
   }
   error(error: Error) {
+    if (error instanceof Array) {
+      this.logInternalServerError(error);
+    }
     if (error instanceof HttpException) {
       const status = error.getStatus();
       if (status >= 400 && status < 500) {
@@ -71,7 +76,31 @@ export class CustomLoggerService implements LoggerService {
       this.logInternalServerError(error);
     }
   }
+  validationError(errors: ValidationError[]) {
+    const botActive = this.configService.get<boolean>('support.active');
+    const formattedErrors = util.inspect(errors, {
+      depth: null,
+      colors: false,
+    });
+    this.logger.error(`Validation Error: \n ${formattedErrors}`);
+    const errorFileName = `error-${Date.now()}.txt`;
+    console.log(errors);
+    const errorMessage = `Validation Error: \n ${formattedErrors}`;
+    const filePath = path.join(
+      __dirname,
+      '..',
+      '..',
+      '..',
+      '..',
+      'logs',
+      errorFileName,
+    );
+    fs.writeFileSync(filePath, errorMessage);
 
+    if (botActive) {
+      this.botService.sendLog(filePath, errorFileName);
+    }
+  }
   warn(message: string) {
     this.logger.warn(message);
   }

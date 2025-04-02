@@ -8,6 +8,7 @@ import {
 } from './employer.interface';
 import { EmployerEntity, SocialLinkEntity } from './employer.entity';
 import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class EmployerRepository implements IEmployerRepository {
@@ -23,10 +24,20 @@ export class EmployerRepository implements IEmployerRepository {
     address: string,
     phone: string,
     email: string,
+    business_type: string,
+    established_date: number,
+    contact_person_name: string,
+    contact_person: string,
+    contact_position: string,
+    number_of_employees: number,
+    country: string,
+    city: string,
+    zip_code: string,
     user_id: number,
     status: EmployerStatusEnum,
     queryRunner: QueryRunner,
   ): Promise<IEmployerEntity> {
+    console.log(established_date);
     const employer = this.repository.create({
       companyName,
       description,
@@ -35,6 +46,15 @@ export class EmployerRepository implements IEmployerRepository {
       phone,
       email,
       status,
+      country,
+      city,
+      contactPersonName: contact_person_name,
+      establishedDate: dayjs(established_date),
+      businessType: business_type,
+      contactPerson: contact_person,
+      contactPosition: contact_position,
+      numberOfEmployees: number_of_employees,
+      zipCode: zip_code,
       user: {
         id: user_id,
       },
@@ -74,7 +94,7 @@ export class EmployerRepository implements IEmployerRepository {
 
     const total: number = await queryBuilder.getCount();
 
-    const data: EmployerEntity[] = await queryBuilder
+    const data: IEmployerEntity[] = await queryBuilder
       .skip(page * limit)
       .take(limit)
       .getMany();

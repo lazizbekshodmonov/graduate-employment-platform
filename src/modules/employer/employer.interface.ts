@@ -12,6 +12,15 @@ export interface IEmployerRepository {
     address: string,
     phone: string,
     email: string,
+    business_type: string,
+    established_date: number,
+    contact_person_name: string,
+    contact_person: string,
+    contact_position: string,
+    number_of_employees: number,
+    country: string,
+    city: string,
+    zip_code: string,
     user_id: number,
     status: EmployerStatusEnum,
     queryRunner: QueryRunner,
@@ -51,9 +60,17 @@ export interface IEmployerEntity extends IBaseEntity {
   phone: string;
   email: string;
   businessType?: string;
+  establishedDate?: Date;
+  contactPersonName?: string;
+  contactPerson?: string;
+  contactPosition?: string;
+  numberOfEmployees?: number;
+  country?: string;
+  city?: string;
+  zipCode?: string;
   socialLinks: ISocialLinkEntity[];
   status: EmployerStatusEnum;
-  file: IFileEntity;
+  file?: IFileEntity;
   user: IUserEntity;
 }
 export interface ISocialLinkEntity extends IBaseEntity {
@@ -63,13 +80,21 @@ export interface ISocialLinkEntity extends IBaseEntity {
 }
 export interface IEmployerResponseDto {
   id: number;
-  companyName: string;
+  company_name: string;
   description: string;
   industry: string;
   address: string;
-  contactPerson: string;
   phone: string;
   email: string;
+  business_type: string;
+  established_date: number;
+  contact_person_name: string;
+  contact_person: string;
+  contact_position: string;
+  number_of_employees: number;
+  country: string;
+  city: string;
+  zip_code: string;
   username: string;
   status: EmployerStatusEnum;
   social_links: ISocialLinkResponseDto[];
@@ -90,6 +115,15 @@ export interface IEmployerCreateRequestDto {
   address: string;
   phone: string;
   email: string;
+  business_type?: string;
+  established_date?: number;
+  contact_person_name?: string;
+  contact_person?: string;
+  contact_position?: string;
+  number_of_employees?: number;
+  country?: string;
+  city?: string;
+  zip_code?: string;
   status: EmployerStatusEnum;
   social_links: ISocialLinkCreateRequestDto[];
 }

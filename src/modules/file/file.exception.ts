@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
-import { BaseException } from './base.exception';
-import { ErrorsEnum } from '../enums/errors';
+import { BaseException } from '../../common/exceptions/base.exception';
+import { ErrorsEnum } from '../../common/enums/errors';
 
 export class FileNotUploadedException extends BaseException {
   constructor() {
