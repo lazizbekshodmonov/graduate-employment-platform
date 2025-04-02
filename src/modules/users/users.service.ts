@@ -4,7 +4,7 @@ import { CustomLoggerService } from '../../common/modules/logger/logger.service'
 import {
   UserAlreadyExistsException,
   UserNotFoundException,
-} from '../../common/exceptions/user.exception';
+} from './user.exception';
 import { UserRepository } from './user.repository';
 import { IUserResponse } from './user.interface';
 import { UserResponseDto } from './user.dto';

@@ -1,7 +1,7 @@
-import { BaseException } from './base.exception';
-import { ErrorsEnum } from '../enums/errors';
+import { BaseException } from '../../common/exceptions/base.exception';
+import { ErrorsEnum } from '../../common/enums/errors';
 import { HttpStatus } from '@nestjs/common';
-import { SocialTypeEnum } from '../../modules/employer/employer.enum';
+import { SocialTypeEnum } from './employer.enum';
 
 export class SocialLinkAlreadyExistsException extends BaseException {
   constructor(type: SocialTypeEnum) {

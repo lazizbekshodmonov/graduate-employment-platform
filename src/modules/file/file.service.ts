@@ -13,7 +13,7 @@ import { ConfigService } from '@nestjs/config';
 import {
   FileNotFoundException,
   FileNotUploadedException,
-} from '../../common/exceptions/file.exception';
+} from './file.exception';
 
 @Injectable()
 export class FileService {

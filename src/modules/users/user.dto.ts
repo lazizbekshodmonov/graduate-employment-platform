@@ -83,7 +83,7 @@ export class UserResponseDto implements IUserResponse {
     if (employer) {
       const employerResponse = new EmployerResponseDto(employer);
       this.employer = employerResponse;
-      this.full_name = employerResponse.companyName;
+      this.full_name = employerResponse.company_name;
     }
   }
 }

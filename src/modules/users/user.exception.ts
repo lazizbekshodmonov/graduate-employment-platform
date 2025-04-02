@@ -1,5 +1,5 @@
-import { BaseException } from './base.exception';
-import { ErrorsEnum } from '../enums/errors';
+import { BaseException } from '../../common/exceptions/base.exception';
+import { ErrorsEnum } from '../../common/enums/errors';
 import { HttpStatus } from '@nestjs/common';
 
 export class UserAlreadyExistsException extends BaseException {

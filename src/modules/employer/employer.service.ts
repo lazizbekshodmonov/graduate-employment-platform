@@ -19,7 +19,7 @@ import { EmployerResponseDto } from './employer.dto';
 import {
   EmployerAlreadyExistsException,
   EmployerNotFoundException,
-} from '../../common/exceptions/employer.exception';
+} from './employer.exception';
 
 @Injectable()
 export class EmployerService {
@@ -63,6 +63,15 @@ export class EmployerService {
         dto.address,
         dto.phone,
         dto.email,
+        dto.business_type,
+        dto.established_date,
+        dto.contact_person_name,
+        dto.contact_person,
+        dto.contact_position,
+        dto.number_of_employees,
+        dto.country,
+        dto.city,
+        dto.zip_code,
         user.id,
         dto.status,
         queryRunner,

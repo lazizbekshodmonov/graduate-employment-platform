@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { getLocalIP } from './common/utils/local.ip';
 import {
   BadRequestException,
   ValidationError,
@@ -9,19 +8,21 @@ import {
 } from '@nestjs/common';
 import { I18nService } from 'nestjs-i18n';
 import { BaseException } from './common/exceptions/base.exception';
+import { CustomLoggerService } from './common/modules/logger/logger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const i18nService =
     app.get<I18nService<Record<string, unknown>>>(I18nService);
-
+  const logger = app.get(CustomLoggerService);
   BaseException.setI18nService(i18nService);
 
   app.useGlobalPipes(
     new ValidationPipe({
       exceptionFactory: (errors: ValidationError[]) => {
         if (errors.length > 0) {
+          logger.validationError(errors);
           return new BadRequestException({
             timestamp: new Date().toISOString(),
             message: 'Bad Request',
