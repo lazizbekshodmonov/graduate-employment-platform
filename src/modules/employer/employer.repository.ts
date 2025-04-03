@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository, UpdateResult } from 'typeorm';
 import {
   IEmployerEntity,
   IEmployerRepository,
@@ -8,7 +8,6 @@ import {
 } from './employer.interface';
 import { EmployerEntity, SocialLinkEntity } from './employer.entity';
 import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
-import dayjs from 'dayjs';
 
 @Injectable()
 export class EmployerRepository implements IEmployerRepository {
@@ -18,14 +17,14 @@ export class EmployerRepository implements IEmployerRepository {
     this.repository = this.dataSource.getRepository(EmployerEntity);
   }
   createEmployer(
-    companyName: string,
+    company_name: string,
     description: string,
     industry: string,
     address: string,
     phone: string,
     email: string,
     business_type: string,
-    established_date: number,
+    established_date: Date,
     contact_person_name: string,
     contact_person: string,
     contact_position: string,
@@ -37,9 +36,8 @@ export class EmployerRepository implements IEmployerRepository {
     status: EmployerStatusEnum,
     queryRunner: QueryRunner,
   ): Promise<IEmployerEntity> {
-    console.log(established_date);
     const employer = this.repository.create({
-      companyName,
+      companyName: company_name,
       description,
       industry,
       address,
@@ -49,7 +47,7 @@ export class EmployerRepository implements IEmployerRepository {
       country,
       city,
       contactPersonName: contact_person_name,
-      establishedDate: dayjs(established_date),
+      establishedDate: established_date,
       businessType: business_type,
       contactPerson: contact_person,
       contactPosition: contact_position,
@@ -63,11 +61,55 @@ export class EmployerRepository implements IEmployerRepository {
     return queryRunner.manager.save(employer);
   }
 
+  updateEmployer(
+    id: number,
+    company_name: string,
+    description: string,
+    industry: string,
+    address: string,
+    phone: string,
+    email: string,
+    business_type: string,
+    established_date: Date,
+    contact_person_name: string,
+    contact_person: string,
+    contact_position: string,
+    number_of_employees: number,
+    country: string,
+    city: string,
+    zip_code: string,
+    status: EmployerStatusEnum,
+    queryRunner: QueryRunner,
+  ): Promise<UpdateResult> {
+    return queryRunner.manager.update(
+      EmployerEntity,
+      { id },
+      {
+        companyName: company_name,
+        description: description,
+        industry: industry,
+        address: address,
+        phone: phone,
+        email: email,
+        businessType: business_type,
+        establishedDate: established_date,
+        contactPersonName: contact_person_name,
+        contactPerson: contact_person,
+        contactPosition: contact_position,
+        numberOfEmployees: number_of_employees,
+        zipCode: zip_code,
+        country: country,
+        city: city,
+        status: status,
+      },
+    );
+  }
+
   findByUserId(id: number): Promise<IEmployerEntity> {
     return this.repository.findOne({ where: { user: { id } } });
   }
 
-  findById(id: number, relations: string[]): Promise<IEmployerEntity> {
+  findById(id: number, relations?: string[]): Promise<IEmployerEntity> {
     return this.repository.findOne({ where: { id }, relations });
   }
 
@@ -109,6 +151,12 @@ export class SocialLinkRepository implements ISocialLinkRepository {
     this.repository = this.dataSource.getRepository(SocialLinkEntity);
   }
 
+  findByEmployerId(employerId: number): Promise<ISocialLinkEntity[]> {
+    return this.repository.find({
+      where: { employer: { id: employerId } },
+    });
+  }
+
   findByEmployerIdAndType(
     employerId: number,
     type: SocialTypeEnum,
@@ -130,5 +178,19 @@ export class SocialLinkRepository implements ISocialLinkRepository {
       employer,
     });
     return queryRunner.manager.save(socialLink);
+  }
+
+  updateSocialLink(
+    id: number,
+    link: string,
+    queryRunner: QueryRunner,
+  ): Promise<UpdateResult> {
+    return queryRunner.manager.update(
+      SocialLinkEntity,
+      { id },
+      {
+        link,
+      },
+    );
   }
 }

@@ -1,19 +1,19 @@
 import { IBaseEntity } from '../../common/interfaces/base.interface';
 import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
 import { IUserEntity } from '../users/user.interface';
-import { QueryRunner } from 'typeorm';
+import { QueryRunner, UpdateResult } from 'typeorm';
 import { IFileEntity } from '../file/file.interface';
 
 export interface IEmployerRepository {
   createEmployer(
-    companyName: string,
+    company_name: string,
     description: string,
     industry: string,
     address: string,
     phone: string,
     email: string,
     business_type: string,
-    established_date: number,
+    established_date: Date,
     contact_person_name: string,
     contact_person: string,
     contact_position: string,
@@ -25,6 +25,27 @@ export interface IEmployerRepository {
     status: EmployerStatusEnum,
     queryRunner: QueryRunner,
   ): Promise<IEmployerEntity>;
+
+  updateEmployer(
+    id: number,
+    company_name: string,
+    description: string,
+    industry: string,
+    address: string,
+    phone: string,
+    email: string,
+    business_type: string,
+    established_date: Date,
+    contact_person_name: string,
+    contact_person: string,
+    contact_position: string,
+    number_of_employees: number,
+    country: string,
+    city: string,
+    zip_code: string,
+    status: EmployerStatusEnum,
+    queryRunner: QueryRunner,
+  ): Promise<UpdateResult>;
 
   findByUserId(id: number): Promise<IEmployerEntity>;
 
@@ -39,6 +60,7 @@ export interface IEmployerRepository {
 }
 
 export interface ISocialLinkRepository {
+  findByEmployerId(employerId: number): Promise<ISocialLinkEntity[]>;
   findByEmployerIdAndType(
     employerId: number,
     type: SocialTypeEnum,
@@ -50,6 +72,11 @@ export interface ISocialLinkRepository {
     employer: IEmployerEntity,
     queryRunner: QueryRunner,
   ): Promise<ISocialLinkEntity>;
+  updateSocialLink(
+    id: number,
+    link: string,
+    queryRunner: QueryRunner,
+  ): Promise<UpdateResult>;
 }
 
 export interface IEmployerEntity extends IBaseEntity {
@@ -128,7 +155,17 @@ export interface IEmployerCreateRequestDto {
   social_links: ISocialLinkCreateRequestDto[];
 }
 
+export interface IEmployerUpdateRequestDto
+  extends Partial<Omit<IEmployerCreateRequestDto, 'social_links'>> {
+  social_links?: ISocialLinkUpdateRequestDto[];
+}
+
 export interface ISocialLinkCreateRequestDto {
   type: SocialTypeEnum;
   link: string;
+}
+
+export interface ISocialLinkUpdateRequestDto
+  extends ISocialLinkCreateRequestDto {
+  id: number;
 }

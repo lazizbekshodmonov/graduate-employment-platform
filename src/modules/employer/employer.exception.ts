@@ -13,6 +13,12 @@ export class SocialLinkAlreadyExistsException extends BaseException {
   }
 }
 
+export class SocialLinkNotFoundException extends BaseException {
+  constructor() {
+    super(ErrorsEnum.SOCIAL_LINK_NOT_FOUND_EXCEPTION, HttpStatus.BAD_REQUEST);
+  }
+}
+
 export class EmployerAlreadyExistsException extends BaseException {
   constructor() {
     super(ErrorsEnum.EMPLOYER_ALREADY_EXIST_EXCEPTION, HttpStatus.BAD_REQUEST);

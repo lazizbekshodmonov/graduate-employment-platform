@@ -2,6 +2,7 @@ import {
   IEmployerCreateRequestDto,
   IEmployerEntity,
   IEmployerResponseDto,
+  IEmployerUpdateRequestDto,
   ISocialLinkCreateRequestDto,
   ISocialLinkEntity,
   ISocialLinkResponseDto,
@@ -23,6 +24,7 @@ import {
 import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
 import { Type } from 'class-transformer';
 import dayjs from 'dayjs';
+import { OmitType } from '@nestjs/mapped-types';
 
 export class EmployerResponseDto implements IEmployerResponseDto {
   readonly id: number;
@@ -179,6 +181,13 @@ export class EmployerCreateRequestDto implements IEmployerCreateRequestDto {
   @Type(() => SocialLinkCreateRequestDto)
   social_links: SocialLinkCreateRequestDto[];
 }
+
+export class EmployerUpdateRequestDto
+  extends OmitType(EmployerCreateRequestDto, [
+    'password',
+    'social_links',
+  ] as const)
+  implements IEmployerUpdateRequestDto {}
 
 export class SocialLinkCreateRequestDto implements ISocialLinkCreateRequestDto {
   @IsNotEmpty()

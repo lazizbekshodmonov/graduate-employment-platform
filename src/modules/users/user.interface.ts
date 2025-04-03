@@ -2,7 +2,7 @@ import { IBaseEntity } from '../../common/interfaces/base.interface';
 import { UserRoleEnum, UserStatusEnum } from './user.enum';
 import { IEmployerResponseDto } from '../employer/employer.interface';
 import { IStudentResponse } from '../student/student.interface';
-import { QueryRunner } from 'typeorm';
+import { QueryRunner, UpdateResult } from 'typeorm';
 
 export interface IUserEntity extends IBaseEntity {
   full_name: string;
@@ -40,4 +40,11 @@ export interface IUserRepository {
     status: UserStatusEnum,
     queryRunner: QueryRunner,
   ): Promise<IUserEntity>;
+  updateUser(
+    id: number,
+    fullName: string,
+    username: string,
+    password: string,
+    status: UserStatusEnum,
+  ): Promise<UpdateResult>;
 }

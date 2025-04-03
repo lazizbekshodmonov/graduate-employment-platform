@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository, UpdateResult } from 'typeorm';
 import { IUserEntity, IUserRepository } from './user.interface';
 import { UserRoleEnum, UserStatusEnum } from './user.enum';
 import { UserEntity } from './user.entity';
@@ -34,6 +34,24 @@ export class UserRepository implements IUserRepository {
     });
 
     return queryRunner.manager.save(user);
+  }
+
+  updateUser(
+    id: number,
+    full_name: string,
+    username: string,
+    password: string,
+    status: UserStatusEnum,
+  ): Promise<UpdateResult> {
+    return this.repository.update(
+      { id },
+      {
+        full_name,
+        username,
+        password,
+        status,
+      },
+    );
   }
 
   createDeveloper(fullName: string, username: string, password: string) {

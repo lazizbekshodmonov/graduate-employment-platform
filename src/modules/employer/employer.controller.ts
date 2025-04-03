@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Query,
+  Put,
 } from '@nestjs/common';
 import { EmployerService } from './employer.service';
 import { Authorize } from '../../common/guards/auth/auth.decarator';
@@ -13,7 +14,10 @@ import { PreAuthorize } from '../../common/guards/role/role.decarator';
 import { EmployerCreateRequestDto } from './employer.dto';
 import { EmployerStatusEnum } from './employer.enum';
 import { IPagination } from '../../common/interfaces/pagination.interface';
-import { IEmployerResponseDto } from './employer.interface';
+import {
+  IEmployerResponseDto,
+  IEmployerUpdateRequestDto,
+} from './employer.interface';
 
 @Controller('employer')
 export class EmployerController {
@@ -51,5 +55,16 @@ export class EmployerController {
   @Get('/:id')
   getEmployerById(@Param('id') id: string): Promise<IEmployerResponseDto> {
     return this.employerService.getEmployerById(+id);
+  }
+
+  @PreAuthorize('SUPER_ADMIN', 'DEVELOPER')
+  @Authorize()
+  @HttpCode(200)
+  @Put('/:id')
+  async updateEmployerInfo(
+    @Param('id') id: string,
+    @Body() requestBody: IEmployerUpdateRequestDto,
+  ): Promise<void> {
+    await this.employerService.updateEmployer(+id, requestBody);
   }
 }
