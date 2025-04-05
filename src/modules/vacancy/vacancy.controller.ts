@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  HttpCode,
-  Req,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, Req } from '@nestjs/common';
 import { VacancyService } from './vacancy.service';
 import { PreAuthorize } from '../../common/guards/role/role.decarator';
 import { VacancyCreateRequestDto } from './vacancy.dto';

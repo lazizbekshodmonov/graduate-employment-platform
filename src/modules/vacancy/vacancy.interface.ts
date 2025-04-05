@@ -1,6 +1,7 @@
 import { IBaseEntity } from '../../common/interfaces/base.interface';
-import { IEmployerEntity } from '../employer/employer.interface';
-import { VacancyStatusEnum, VacancyTypeEnum } from './vacancy.enum';
+import { VacancyTypeEnum } from './vacancy.enum';
+import { IEmployerEntity } from '../employer/types/entity.type';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 export interface IVacancyRepository {
   createVacancy(
@@ -11,7 +12,7 @@ export interface IVacancyRepository {
     responsible_person: string,
     contact: string,
     type: VacancyTypeEnum,
-    status: VacancyStatusEnum,
+    status: StatusEnum,
     employer_id: number,
     salary?: number,
   ): Promise<IVacancyEntity>;
@@ -26,7 +27,7 @@ export interface IVacancyEntity extends IBaseEntity {
   responsible_person: string;
   contact: string;
   type: VacancyTypeEnum;
-  status: VacancyStatusEnum;
+  status: StatusEnum;
   employer: IEmployerEntity;
 }
 
@@ -40,7 +41,7 @@ export interface IVacancyResponse {
   responsible_person: string;
   contact: string;
   type: VacancyTypeEnum;
-  status: VacancyStatusEnum;
+  status: StatusEnum;
   employer: IEmployerEntity;
 }
 
@@ -53,5 +54,5 @@ export interface IVacancyCreateRequest {
   responsible_person: string;
   contact: string;
   type: VacancyTypeEnum;
-  status: VacancyStatusEnum;
+  status: StatusEnum;
 }
