@@ -6,24 +6,19 @@ import {
   UserNotFoundException,
 } from './user.exception';
 import { UserRepository } from './user.repository';
-import { IUserResponse } from './user.interface';
-import { UserResponseDto } from './user.dto';
-import { UserRoleEnum } from './user.enum';
-import { IStudentEntity } from '../student/student.interface';
-import { StudentRepository } from '../student/student.repository';
-import { IEmployerEntity } from '../employer/employer.interface';
-import { EmployerRepository } from '../employer/employer.repository';
 import { ConfigService } from '@nestjs/config';
+import { UserMapper } from './user.mapper';
+import { UserResponseDto } from './dto/user-response.dto';
+import { IUserResponseDto } from './types/dto.type';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
-    private readonly studentRepository: StudentRepository,
-    private readonly employerRepository: EmployerRepository,
     private readonly passwordService: PasswordService,
     private readonly logger: CustomLoggerService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly userMapper: UserMapper,
   ) {}
   async createDeveloper() {
     try {
@@ -47,22 +42,13 @@ export class UsersService {
       console.log(error);
     }
   }
-  async findById(id: number): Promise<IUserResponse> {
+  async findById(id: number): Promise<IUserResponseDto> {
     try {
       const user = await this.userRepository.findById(id);
       if (!user) {
         throw new UserNotFoundException();
       }
-      let student: IStudentEntity;
-      let employer: IEmployerEntity;
-
-      if (user.role === UserRoleEnum.STUDENT) {
-        student = await this.studentRepository.getByUserId(user.id);
-      }
-      if (user.role === UserRoleEnum.EMPLOYER) {
-        employer = await this.employerRepository.findByUserId(user.id);
-      }
-      return new UserResponseDto(user, employer, student);
+      return new UserResponseDto(user);
     } catch (error) {
       this.logger.error(error);
     }

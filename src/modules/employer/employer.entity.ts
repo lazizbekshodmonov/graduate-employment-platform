@@ -7,50 +7,51 @@ import {
   OneToOne,
 } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
-import { IEmployerEntity, ISocialLinkEntity } from './employer.interface';
-import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
+import { SocialTypeEnum } from './employer.enum';
 import { UserEntity } from '../users/user.entity';
-import { IUserEntity } from '../users/user.interface';
 import { FileEntity } from '../file/file.entity';
 import { IFileEntity } from '../file/file.interface';
+import { IUserEntity } from '../users/types/entity.type';
+import { IEmployerEntity, ISocialLinkEntity } from './types/entity.type';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 @Entity('employer')
 export class EmployerEntity extends BaseEntity implements IEmployerEntity {
   @Column({ type: 'varchar', length: 255 })
-  companyName: string;
+  company_name: string;
 
-  @Column({ type: 'varchar', length: 500 })
-  description: string;
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  description?: string;
 
-  @Column({ type: 'varchar', length: 500 })
-  industry: string;
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  industry?: string;
 
-  @Column({ type: 'varchar', length: 500 })
-  address: string;
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  address?: string;
 
-  @Column({ type: 'varchar', length: 12 })
-  phone: string;
-
-  @Column({ type: 'varchar', length: 255 })
-  email: string;
+  @Column({ type: 'varchar', length: 12, nullable: true })
+  phone?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  businessType?: string;
+  email?: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  business_type?: string;
 
   @Column({ type: 'date', nullable: true })
-  establishedDate?: Date;
+  established_date?: Date;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  contactPersonName?: string;
+  contact_person_name?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  contactPerson?: string;
+  contact_person?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  contactPosition?: string;
+  contact_position?: string;
 
   @Column({ type: 'integer', nullable: true })
-  numberOfEmployees?: number;
+  number_of_employees?: number;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   country?: string;
@@ -59,24 +60,24 @@ export class EmployerEntity extends BaseEntity implements IEmployerEntity {
   city?: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  zipCode?: string;
+  zip_code?: string;
 
   @Column({
     type: 'enum',
-    enum: EmployerStatusEnum,
+    enum: StatusEnum,
     enumName: 'employer_status_enum',
-    nullable: false,
+    default: StatusEnum.ACTIVE,
   })
-  status: EmployerStatusEnum;
+  status?: StatusEnum;
 
   @OneToMany(
     () => SocialLinkEntity,
     (entity: ISocialLinkEntity) => entity.employer,
     { cascade: true },
   )
-  socialLinks: ISocialLinkEntity[];
+  social_links?: ISocialLinkEntity[];
 
-  @OneToOne(() => FileEntity)
+  @ManyToOne(() => FileEntity)
   @JoinColumn({ name: 'logo', referencedColumnName: 'hashId' })
   file?: IFileEntity;
 
@@ -100,7 +101,7 @@ export class SocialLinkEntity extends BaseEntity implements ISocialLinkEntity {
 
   @ManyToOne(
     () => EmployerEntity,
-    (entity: IEmployerEntity) => entity.socialLinks,
+    (entity: IEmployerEntity) => entity.social_links,
     { onDelete: 'CASCADE' },
   )
   @JoinColumn({ name: 'employer_id' })

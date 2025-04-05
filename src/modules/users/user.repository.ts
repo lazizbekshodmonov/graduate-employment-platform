@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner, Repository, UpdateResult } from 'typeorm';
-import { IUserEntity, IUserRepository } from './user.interface';
-import { UserRoleEnum, UserStatusEnum } from './user.enum';
+import { UserRoleEnum } from './user.enum';
 import { UserEntity } from './user.entity';
+import { IUserRepository } from './types/repository.type';
+import { StatusEnum } from '../../common/enums/status.enum';
+import { IUserEntity } from './types/entity.type';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -17,41 +19,26 @@ export class UserRepository implements IUserRepository {
   findByUserName(userName: string): Promise<IUserEntity> {
     return this.repository.findOne({ where: { username: userName } });
   }
-  createUser(
-    fullName: string,
+
+  findByUserNameOfTransaction(
     username: string,
-    password: string,
-    role: UserRoleEnum,
-    status: UserStatusEnum,
     queryRunner: QueryRunner,
   ): Promise<IUserEntity> {
-    const user = this.repository.create({
-      full_name: fullName,
-      username,
-      password,
-      role,
-      status,
+    return queryRunner.manager.findOne(UserEntity, {
+      where: { username },
     });
+  }
+  createUser(
+    entity: Partial<IUserEntity>,
+    queryRunner: QueryRunner,
+  ): Promise<IUserEntity> {
+    const user = queryRunner.manager.create(UserEntity, entity);
 
     return queryRunner.manager.save(user);
   }
 
-  updateUser(
-    id: number,
-    full_name: string,
-    username: string,
-    password: string,
-    status: UserStatusEnum,
-  ): Promise<UpdateResult> {
-    return this.repository.update(
-      { id },
-      {
-        full_name,
-        username,
-        password,
-        status,
-      },
-    );
+  updateUser(id: number, entity: Partial<IUserEntity>): Promise<UpdateResult> {
+    return this.repository.update({ id }, entity);
   }
 
   createDeveloper(fullName: string, username: string, password: string) {
@@ -60,7 +47,7 @@ export class UserRepository implements IUserRepository {
       username,
       password,
       role: UserRoleEnum.DEVELOPER,
-      status: UserStatusEnum.ACTIVE,
+      status: StatusEnum.ACTIVE,
     });
   }
 }

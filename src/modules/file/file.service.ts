@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-  StreamableFile,
-} from '@nestjs/common';
+import { Injectable, StreamableFile } from '@nestjs/common';
 import { FileRepository } from './file.repository';
 import { join } from 'path';
 import * as fs from 'node:fs';
@@ -14,6 +9,7 @@ import {
   FileNotFoundException,
   FileNotUploadedException,
 } from './file.exception';
+import { IFileEntity } from './file.interface';
 
 @Injectable()
 export class FileService {
@@ -76,11 +72,7 @@ export class FileService {
 
   async downloadFile(hashId: string): Promise<StreamableFile> {
     try {
-      const file = await this.fileRepository.findByHashId(hashId);
-
-      if (!file) {
-        throw new FileNotFoundException();
-      }
+      const file = await this.findByHashId(hashId);
 
       const filePath = join(process.cwd(), file.path);
       const fileStream = fs.createReadStream(filePath);
@@ -93,5 +85,12 @@ export class FileService {
     } catch (error) {
       this.logger.error(error);
     }
+  }
+  async findByHashId(hashId: string): Promise<IFileEntity> {
+    const file = await this.fileRepository.findByHashId(hashId);
+    if (!file) {
+      throw new FileNotFoundException();
+    }
+    return file;
   }
 }

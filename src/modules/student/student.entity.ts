@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
 import { IStudentEntity } from './student.interface';
 import { UserEntity } from '../users/user.entity';
-import { IUserEntity } from '../users/user.interface';
+import { IUserEntity } from '../users/types/entity.type';
 
 @Entity('student')
 export class StudentEntity extends BaseEntity implements IStudentEntity {

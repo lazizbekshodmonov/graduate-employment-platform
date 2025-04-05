@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, QueryRunner, Repository, UpdateResult } from 'typeorm';
-import {
-  IEmployerEntity,
-  IEmployerRepository,
-  ISocialLinkEntity,
-  ISocialLinkRepository,
-} from './employer.interface';
+
 import { EmployerEntity, SocialLinkEntity } from './employer.entity';
-import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
+import { SocialTypeEnum } from './employer.enum';
+import { IEmployerEntity, ISocialLinkEntity } from './types/entity.type';
+import {
+  IEmployerRepository,
+  ISocialLinkRepository,
+} from './types/repository.type';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 @Injectable()
 export class EmployerRepository implements IEmployerRepository {
@@ -17,90 +18,24 @@ export class EmployerRepository implements IEmployerRepository {
     this.repository = this.dataSource.getRepository(EmployerEntity);
   }
   createEmployer(
-    company_name: string,
-    description: string,
-    industry: string,
-    address: string,
-    phone: string,
-    email: string,
-    business_type: string,
-    established_date: Date,
-    contact_person_name: string,
-    contact_person: string,
-    contact_position: string,
-    number_of_employees: number,
-    country: string,
-    city: string,
-    zip_code: string,
-    user_id: number,
-    status: EmployerStatusEnum,
+    employerEntity: IEmployerEntity,
     queryRunner: QueryRunner,
   ): Promise<IEmployerEntity> {
-    const employer = this.repository.create({
-      companyName: company_name,
-      description,
-      industry,
-      address,
-      phone,
-      email,
-      status,
-      country,
-      city,
-      contactPersonName: contact_person_name,
-      establishedDate: established_date,
-      businessType: business_type,
-      contactPerson: contact_person,
-      contactPosition: contact_position,
-      numberOfEmployees: number_of_employees,
-      zipCode: zip_code,
-      user: {
-        id: user_id,
-      },
-    });
+    const employer = queryRunner.manager.create(EmployerEntity, employerEntity);
 
     return queryRunner.manager.save(employer);
   }
 
   updateEmployer(
     id: number,
-    company_name: string,
-    description: string,
-    industry: string,
-    address: string,
-    phone: string,
-    email: string,
-    business_type: string,
-    established_date: Date,
-    contact_person_name: string,
-    contact_person: string,
-    contact_position: string,
-    number_of_employees: number,
-    country: string,
-    city: string,
-    zip_code: string,
-    status: EmployerStatusEnum,
+    employer: Partial<IEmployerEntity>,
     queryRunner: QueryRunner,
   ): Promise<UpdateResult> {
     return queryRunner.manager.update(
       EmployerEntity,
       { id },
       {
-        companyName: company_name,
-        description: description,
-        industry: industry,
-        address: address,
-        phone: phone,
-        email: email,
-        businessType: business_type,
-        establishedDate: established_date,
-        contactPersonName: contact_person_name,
-        contactPerson: contact_person,
-        contactPosition: contact_position,
-        numberOfEmployees: number_of_employees,
-        zipCode: zip_code,
-        country: country,
-        city: city,
-        status: status,
+        ...employer,
       },
     );
   }
@@ -117,13 +52,12 @@ export class EmployerRepository implements IEmployerRepository {
     page: number,
     limit: number,
     search?: string,
-    status?: EmployerStatusEnum,
+    status?: StatusEnum,
   ): Promise<{
     data: IEmployerEntity[];
     total: number;
   }> {
     const queryBuilder = this.repository.createQueryBuilder('employer');
-
     if (search) {
       queryBuilder.andWhere('employer.companyName ILIKE :search', {
         search: `%${search}%`,
@@ -139,6 +73,8 @@ export class EmployerRepository implements IEmployerRepository {
     const data: IEmployerEntity[] = await queryBuilder
       .skip(page * limit)
       .take(limit)
+      .leftJoinAndSelect('employer.file', 'file')
+      .leftJoinAndSelect('employer.user', 'user')
       .getMany();
     return { data, total };
   }

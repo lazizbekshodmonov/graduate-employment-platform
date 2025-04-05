@@ -19,6 +19,15 @@ export class SocialLinkNotFoundException extends BaseException {
   }
 }
 
+export class FileUsedCreateEmployerException extends BaseException {
+  constructor() {
+    super(
+      ErrorsEnum.FILE_USED_CREATE_EMPLOYER_EXCEPTION,
+      HttpStatus.BAD_REQUEST,
+    );
+  }
+}
+
 export class EmployerAlreadyExistsException extends BaseException {
   constructor() {
     super(ErrorsEnum.EMPLOYER_ALREADY_EXIST_EXCEPTION, HttpStatus.BAD_REQUEST);

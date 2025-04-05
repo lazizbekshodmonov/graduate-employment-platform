@@ -1,8 +1,3 @@
-export enum UserStatusEnum {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
-
 export enum UserRoleEnum {
   DEVELOPER = 'DEVELOPER',
   STUDENT = 'STUDENT',
