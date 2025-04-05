@@ -16,7 +16,7 @@ support:
 file:
   upload_path: './uploads'
 dev:
-  create: false
+  create: true
   full_name: 'Super Admin'
   username: 'super_admin'
   password: 'SuperAdmin#123'
