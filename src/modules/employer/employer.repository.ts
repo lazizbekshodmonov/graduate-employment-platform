@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, QueryRunner, Repository } from 'typeorm';
-import {
-  IEmployerEntity,
-  IEmployerRepository,
-  ISocialLinkEntity,
-  ISocialLinkRepository,
-} from './employer.interface';
+import { DataSource, QueryRunner, Repository, UpdateResult } from 'typeorm';
+
 import { EmployerEntity, SocialLinkEntity } from './employer.entity';
-import { EmployerStatusEnum, SocialTypeEnum } from './employer.enum';
-import dayjs from 'dayjs';
+import { SocialTypeEnum } from './employer.enum';
+import { IEmployerEntity, ISocialLinkEntity } from './types/entity.type';
+import {
+  IEmployerRepository,
+  ISocialLinkRepository,
+} from './types/repository.type';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 @Injectable()
 export class EmployerRepository implements IEmployerRepository {
@@ -18,56 +18,33 @@ export class EmployerRepository implements IEmployerRepository {
     this.repository = this.dataSource.getRepository(EmployerEntity);
   }
   createEmployer(
-    companyName: string,
-    description: string,
-    industry: string,
-    address: string,
-    phone: string,
-    email: string,
-    business_type: string,
-    established_date: number,
-    contact_person_name: string,
-    contact_person: string,
-    contact_position: string,
-    number_of_employees: number,
-    country: string,
-    city: string,
-    zip_code: string,
-    user_id: number,
-    status: EmployerStatusEnum,
+    employerEntity: IEmployerEntity,
     queryRunner: QueryRunner,
   ): Promise<IEmployerEntity> {
-    console.log(established_date);
-    const employer = this.repository.create({
-      companyName,
-      description,
-      industry,
-      address,
-      phone,
-      email,
-      status,
-      country,
-      city,
-      contactPersonName: contact_person_name,
-      establishedDate: dayjs(established_date),
-      businessType: business_type,
-      contactPerson: contact_person,
-      contactPosition: contact_position,
-      numberOfEmployees: number_of_employees,
-      zipCode: zip_code,
-      user: {
-        id: user_id,
-      },
-    });
+    const employer = queryRunner.manager.create(EmployerEntity, employerEntity);
 
     return queryRunner.manager.save(employer);
+  }
+
+  updateEmployer(
+    id: number,
+    employer: Partial<IEmployerEntity>,
+    queryRunner: QueryRunner,
+  ): Promise<UpdateResult> {
+    return queryRunner.manager.update(
+      EmployerEntity,
+      { id },
+      {
+        ...employer,
+      },
+    );
   }
 
   findByUserId(id: number): Promise<IEmployerEntity> {
     return this.repository.findOne({ where: { user: { id } } });
   }
 
-  findById(id: number, relations: string[]): Promise<IEmployerEntity> {
+  findById(id: number, relations?: string[]): Promise<IEmployerEntity> {
     return this.repository.findOne({ where: { id }, relations });
   }
 
@@ -75,13 +52,12 @@ export class EmployerRepository implements IEmployerRepository {
     page: number,
     limit: number,
     search?: string,
-    status?: EmployerStatusEnum,
+    status?: StatusEnum,
   ): Promise<{
     data: IEmployerEntity[];
     total: number;
   }> {
     const queryBuilder = this.repository.createQueryBuilder('employer');
-
     if (search) {
       queryBuilder.andWhere('employer.companyName ILIKE :search', {
         search: `%${search}%`,
@@ -97,6 +73,8 @@ export class EmployerRepository implements IEmployerRepository {
     const data: IEmployerEntity[] = await queryBuilder
       .skip(page * limit)
       .take(limit)
+      .leftJoinAndSelect('employer.file', 'file')
+      .leftJoinAndSelect('employer.user', 'user')
       .getMany();
     return { data, total };
   }
@@ -107,6 +85,12 @@ export class SocialLinkRepository implements ISocialLinkRepository {
   private readonly repository: Repository<ISocialLinkEntity>;
   constructor(private readonly dataSource: DataSource) {
     this.repository = this.dataSource.getRepository(SocialLinkEntity);
+  }
+
+  findByEmployerId(employerId: number): Promise<ISocialLinkEntity[]> {
+    return this.repository.find({
+      where: { employer: { id: employerId } },
+    });
   }
 
   findByEmployerIdAndType(
@@ -130,5 +114,19 @@ export class SocialLinkRepository implements ISocialLinkRepository {
       employer,
     });
     return queryRunner.manager.save(socialLink);
+  }
+
+  updateSocialLink(
+    id: number,
+    link: string,
+    queryRunner: QueryRunner,
+  ): Promise<UpdateResult> {
+    return queryRunner.manager.update(
+      SocialLinkEntity,
+      { id },
+      {
+        link,
+      },
+    );
   }
 }

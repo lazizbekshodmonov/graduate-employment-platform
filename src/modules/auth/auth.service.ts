@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../users/user.entity';
 import { PasswordService } from '../../common/services/password.service';
 import { TokenService } from '../../common/modules/token/token.service';
-import { UserRoleEnum, UserStatusEnum } from '../users/user.enum';
+import { UserRoleEnum } from '../users/user.enum';
 import { CustomLoggerService } from '../../common/modules/logger/logger.service';
 import { AuthLoginRequest, AuthTokenResponse } from './auth.dto';
 import { TokenTypeEnum } from './auth.enum';
@@ -15,7 +15,8 @@ import { UserRepository } from '../users/user.repository';
 import { IStudentEntity } from '../student/student.interface';
 import { StudentRepository } from '../student/student.repository';
 import { EmployerRepository } from '../employer/employer.repository';
-import { EmployerEntity } from '../employer/employer.entity';
+import { IEmployerEntity } from '../employer/types/entity.type';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +37,7 @@ export class AuthService {
         throw new UsernameOrPasswordInvalidException();
       }
 
-      if (user.status !== UserStatusEnum.ACTIVE) {
+      if (user.status !== StatusEnum.ACTIVE) {
         throw new UserIsBlockedException();
       }
 
@@ -49,7 +50,7 @@ export class AuthService {
         throw new UsernameOrPasswordInvalidException();
       }
       let student: IStudentEntity;
-      let employer: EmployerEntity;
+      let employer: IEmployerEntity;
       if (user.role === UserRoleEnum.STUDENT) {
         student = await this.studentRepository.getByUserId(user.id);
       }
@@ -87,12 +88,12 @@ export class AuthService {
       }
       const user = await this.userRepository.findById(refreshToken.userId);
 
-      if (!user || user?.status !== UserStatusEnum.ACTIVE) {
+      if (!user || user?.status !== StatusEnum.ACTIVE) {
         throw new InvalidRefreshTokenException(authDto.refresh_token);
       }
 
       let student: IStudentEntity;
-      let employer: EmployerEntity;
+      let employer: IEmployerEntity;
       if (user.role === UserRoleEnum.STUDENT) {
         student = await this.studentRepository.getByUserId(user.id);
       }

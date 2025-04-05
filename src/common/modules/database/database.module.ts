@@ -19,6 +19,7 @@ import { db_config } from './config';
         database: db_config.POSTGRES_DBNAME,
         entities: [join(__dirname + '../../../../**/*.entity{.ts,.js}')],
         synchronize: configService.get<boolean>('db.postgres.synchronize'),
+        dropSchema: configService.get<boolean>('db.postgres.dropSchema'),
       }),
     }),
 

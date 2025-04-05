@@ -1,7 +1,8 @@
 import { Column, Entity, Unique } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
-import { UserRoleEnum, UserStatusEnum } from './user.enum';
-import { IUserEntity } from './user.interface';
+import { UserRoleEnum } from './user.enum';
+import { StatusEnum } from '../../common/enums/status.enum';
+import { IUserEntity } from './types/entity.type';
 
 @Entity('users')
 @Unique(['username'])
@@ -24,8 +25,8 @@ export class UserEntity extends BaseEntity implements IUserEntity {
 
   @Column({
     type: 'enum',
-    enum: UserStatusEnum,
+    enum: StatusEnum,
     enumName: 'user_status_enum',
   })
-  status: UserStatusEnum;
+  status: StatusEnum;
 }

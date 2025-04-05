@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { IVacancyEntity, IVacancyRepository } from './vacancy.interface';
 import { VacancyEntity } from './vacancy.entity';
-import { VacancyStatusEnum, VacancyTypeEnum } from './vacancy.enum';
-import { IEmployerEntity } from '../employer/employer.interface';
+import { VacancyTypeEnum } from './vacancy.enum';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 @Injectable()
 export class VacancyRepository implements IVacancyRepository {
@@ -20,7 +20,7 @@ export class VacancyRepository implements IVacancyRepository {
     responsible_person: string,
     contact: string,
     type: VacancyTypeEnum,
-    status: VacancyStatusEnum,
+    status: StatusEnum,
     employer_id: number,
     salary?: number,
   ): Promise<IVacancyEntity> {

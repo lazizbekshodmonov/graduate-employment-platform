@@ -8,7 +8,8 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { IVacancyCreateRequest } from './vacancy.interface';
-import { VacancyStatusEnum, VacancyTypeEnum } from './vacancy.enum';
+import { VacancyTypeEnum } from './vacancy.enum';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 export class VacancyCreateRequestDto implements IVacancyCreateRequest {
   @IsNotEmpty()
@@ -54,6 +55,6 @@ export class VacancyCreateRequestDto implements IVacancyCreateRequest {
   contact: string;
 
   @IsNotEmpty()
-  @IsEnum(VacancyStatusEnum)
-  status: VacancyStatusEnum;
+  @IsEnum(StatusEnum)
+  status: StatusEnum;
 }

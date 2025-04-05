@@ -1,5 +1,5 @@
 import { IBaseEntity } from '../../common/interfaces/base.interface';
-import { IUserEntity } from '../users/user.interface';
+import { IUserEntity } from '../users/types/entity.type';
 
 export interface IStudentEntity extends IBaseEntity {
   first_name: string;

@@ -8,5 +8,6 @@
   "FILE_NOT_FOUND": "Fayl topilmadi",
   "SOCIAL_LINK_ALREADY_EXIST_EXCEPTION": "{type} link allaqachon mavjud",
   "EMPLOYER_ALREADY_EXIST_EXCEPTION": "Ish beruvchi allaqachon mavjud",
-  "EMPLOYER_NOT_FOUND_EXCEPTION": "Ish beruvchi topilmadi"
+  "EMPLOYER_NOT_FOUND_EXCEPTION": "Ish beruvchi topilmadi",
+  "FILE_USED_CREATE_EMPLOYER_EXCEPTION": "Bu fayldan avval foydalanilgan"
 }

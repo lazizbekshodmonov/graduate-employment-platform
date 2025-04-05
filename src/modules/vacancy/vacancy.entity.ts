@@ -1,10 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../common/entities/base.entity';
-import { IEmployerEntity } from '../employer/employer.interface';
 
 import { EmployerEntity } from '../employer/employer.entity';
 import { IVacancyEntity } from './vacancy.interface';
-import { VacancyStatusEnum, VacancyTypeEnum } from './vacancy.enum';
+import { VacancyTypeEnum } from './vacancy.enum';
+import { IEmployerEntity } from '../employer/types/entity.type';
+import { StatusEnum } from '../../common/enums/status.enum';
 
 @Entity('vacancy')
 export class VacancyEntity extends BaseEntity implements IVacancyEntity {
@@ -31,11 +32,11 @@ export class VacancyEntity extends BaseEntity implements IVacancyEntity {
 
   @Column({
     type: 'enum',
-    enum: VacancyStatusEnum,
+    enum: StatusEnum,
     enumName: 'vacancy_status_enum',
     nullable: false,
   })
-  status: VacancyStatusEnum;
+  status: StatusEnum;
 
   @Column({
     type: 'enum',

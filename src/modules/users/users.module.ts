@@ -8,6 +8,7 @@ import { UserEntity } from './user.entity';
 import { UserRepository } from './user.repository';
 import { StudentRepository } from '../student/student.repository';
 import { EmployerRepository } from '../employer/employer.repository';
+import { UserMapper } from './user.mapper';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],
@@ -19,6 +20,7 @@ import { EmployerRepository } from '../employer/employer.repository';
     UserRepository,
     StudentRepository,
     EmployerRepository,
+    UserMapper,
   ],
 })
 export class UsersModule implements OnModuleInit {
