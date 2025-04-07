@@ -27,12 +27,15 @@ import { FileService } from '../file/file.service';
 import { EmployerResponseDto } from './dto/employer.response.dto';
 import { StatusEnum } from '../../common/enums/status.enum';
 import { IEmployerEntity } from './types/entity.type';
+import { VacancyRepository } from '../vacancy/vacancy.repository';
+import { VacancyStatusEnum } from '../vacancy/vacancy.enum';
 
 @Injectable()
 export class EmployerService {
   constructor(
     private employerRepository: EmployerRepository,
     private socialLinkRepository: SocialLinkRepository,
+    private vacancyRepository: VacancyRepository,
     private userRepository: UserRepository,
     private fileService: FileService,
     private logger: CustomLoggerService,
@@ -149,6 +152,14 @@ export class EmployerService {
         mappedEmployer,
         queryRunner,
       );
+
+      if (dto.status === StatusEnum.INACTIVE) {
+        await this.vacancyRepository.changeMultipleStatus(
+          employer.id,
+          VacancyStatusEnum.INACTIVE,
+          queryRunner,
+        );
+      }
 
       await this.manageSocialLinks(employer, dto.socialLinks, queryRunner);
     });

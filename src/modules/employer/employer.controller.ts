@@ -7,6 +7,8 @@ import {
   Param,
   Query,
   Put,
+  ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { EmployerService } from './employer.service';
 import { Authorize } from '../../common/guards/auth/auth.decarator';
@@ -34,17 +36,12 @@ export class EmployerController {
   @HttpCode(200)
   @Get()
   getAllEmployers(
-    @Query('page') page: string,
-    @Query('size') size: string,
+    @Query('page', new DefaultValuePipe(0), ParseIntPipe) page: number,
+    @Query('size', new DefaultValuePipe(20), ParseIntPipe) size: number,
     @Query('search') search: string,
     @Query('status') status: StatusEnum,
   ): Promise<IPagination<IEmployerResponseDto>> {
-    return this.employerService.getAllEmployers(
-      page ? +page : 0,
-      size ? +size : 20,
-      search,
-      status,
-    );
+    return this.employerService.getAllEmployers(page, size, search, status);
   }
 
   @PreAuthorize('SUPER_ADMIN', 'DEVELOPER')

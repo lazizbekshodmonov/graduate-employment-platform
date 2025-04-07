@@ -14,6 +14,7 @@ import { FileService } from '../file/file.service';
 import { UserMapper } from '../users/user.mapper';
 import { EmployerMapper } from './employer.mapper';
 import { FileRepository } from '../file/file.repository';
+import { VacancyRepository } from '../vacancy/vacancy.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EmployerEntity])],
@@ -23,6 +24,7 @@ import { FileRepository } from '../file/file.repository';
     PasswordService,
     FileService,
     EmployerRepository,
+    VacancyRepository,
     SocialLinkRepository,
     UserRepository,
     StudentRepository,

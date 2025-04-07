@@ -4,7 +4,7 @@ http:
 db:
   postgres:
     synchronize: true
-    dropSchema: true
+    dropSchema: false
 hash:
   salt: 10
   file_salt: 'U12Dwci01lqE'
@@ -16,7 +16,7 @@ support:
 file:
   upload_path: './uploads'
 dev:
-  create: true
+  create: false
   full_name: 'Super Admin'
   username: 'super_admin'
   password: 'SuperAdmin#123'
