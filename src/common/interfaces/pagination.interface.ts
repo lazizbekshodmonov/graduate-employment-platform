@@ -5,3 +5,8 @@ export interface IPagination<T> {
   totalElements: number;
   totalPages: number;
 }
+
+export interface IPaginatedResultByEntity<T> {
+  data: T[];
+  total: number;
+}
