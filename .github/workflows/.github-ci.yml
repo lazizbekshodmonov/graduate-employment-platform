@@ -76,7 +76,7 @@ jobs:
 
           curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
             -d chat_id=${TELEGRAM_CHAT_ID} \
-            -d text="✅ CI: Build succeeded in ${duration} seconds."
+            -d text="Backend:✅ CI: Build succeeded in ${duration} seconds."
 
       - name: Notify Failure
         if: failure()
@@ -91,4 +91,4 @@ jobs:
 
           curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
             -d chat_id=${TELEGRAM_CHAT_ID} \
-            -d text="‼️ CI: Build failed in ${duration} seconds."
+            -d text="Backend:‼️ CI: Build failed in ${duration} seconds."

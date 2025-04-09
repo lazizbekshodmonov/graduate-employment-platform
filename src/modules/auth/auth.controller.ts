@@ -1,6 +1,10 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthLoginRequest, AuthTokenResponse } from './auth.dto';
+import {
+  AuthLoginRequest,
+  AuthTokenResponse,
+  HemisLoginRequestDto,
+} from './auth.dto';
 import { GrantTypeEnum } from './auth.enum';
 
 @Controller('auth')
@@ -16,7 +20,9 @@ export class AuthController {
       return this.authService.refreshToken(authDto);
     }
   }
-  // @HttpCode(200)
-  // @Post('register')
-  // register(@Body() authDto: AuthLoginRequest): Promise<AuthTokenResponse> {}
+  @HttpCode(200)
+  @Post('hemis')
+  register(@Body() authDto: HemisLoginRequestDto): Promise<AuthTokenResponse> {
+    return this.authService.loginWithHemis(authDto);
+  }
 }

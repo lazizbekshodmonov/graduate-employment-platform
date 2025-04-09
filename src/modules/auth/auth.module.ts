@@ -11,11 +11,16 @@ import { StudentRepository } from '../student/student.repository';
 import { StudentEntity } from '../student/student.entity';
 import { EmployerEntity } from '../employer/employer.entity';
 import { EmployerRepository } from '../employer/employer.repository';
+import { HemisModule } from '../../common/modules/hemis/hemis.module';
+import { StudentService } from '../student/student.service';
+import { HemisService } from '../../common/modules/hemis/hemis.service';
+import { StudentMapper } from '../student/student.mapper';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, StudentEntity, EmployerEntity]),
     TokenModule,
+    HemisModule,
   ],
   controllers: [AuthController],
   providers: [
@@ -25,6 +30,9 @@ import { EmployerRepository } from '../employer/employer.repository';
     UserRepository,
     StudentRepository,
     EmployerRepository,
+    StudentService,
+    HemisService,
+    StudentMapper,
   ],
 })
 export class AuthModule {}

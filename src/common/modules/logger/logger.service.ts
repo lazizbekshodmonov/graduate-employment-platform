@@ -13,6 +13,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as util from 'util';
 import { ConfigService } from '@nestjs/config';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class CustomLoggerService implements LoggerService {
@@ -56,7 +57,10 @@ export class CustomLoggerService implements LoggerService {
     if (botActive) {
       this.botService.sendLog(filePath, errorFileName);
     }
-    if (error.message === 'VALIDATION_EXCEPTION') {
+    if (
+      error.message === 'VALIDATION_EXCEPTION' ||
+      error instanceof AxiosError
+    ) {
       throw new BadRequestException(error.message);
     }
     throw new InternalServerErrorException();

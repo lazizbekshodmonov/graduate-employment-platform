@@ -1,20 +1,23 @@
 import { IBaseEntity } from '../../common/interfaces/base.interface';
 import { IUserEntity } from '../users/types/entity.type';
+import { StatusEnum } from '../../common/enums/status.enum';
+import { IFileEntity } from '../file/file.interface';
 
 export interface IStudentEntity extends IBaseEntity {
-  first_name: string;
-  last_name: string;
-  middle_name: string;
+  student_id: number;
+  full_name: string;
   email: string;
   phone_number: string;
+  status: StatusEnum;
+  access_token: string;
+  refresh_token: string;
   user: IUserEntity;
+  file?: IFileEntity;
 }
 
 export interface IStudentResponse {
   id: number;
-  first_name: string;
-  last_name: string;
-  middle_name: string;
+  student_id: number;
   full_name: string;
   email: string;
   phone_number: string;

@@ -1,6 +1,7 @@
 import {
   IAuthLoginRequest,
   IAuthTokenResponse,
+  IHemisLoginRequestDto,
   ITokenSchema,
   TGrantType,
 } from './auth.interface';
@@ -27,6 +28,16 @@ export class AuthLoginRequest implements IAuthLoginRequest {
   @IsNotEmpty()
   @IsString()
   refresh_token: string;
+}
+
+export class HemisLoginRequestDto implements IHemisLoginRequestDto {
+  @IsNotEmpty()
+  @IsString()
+  code: string;
+
+  @IsNotEmpty()
+  @IsString()
+  redirect_url: string;
 }
 
 export class AuthTokenResponse implements IAuthTokenResponse {

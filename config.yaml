@@ -1,6 +1,8 @@
 http:
   host: 'localhost'
   port: 8080
+https:
+  host: ''
 db:
   postgres:
     synchronize: true
@@ -22,5 +24,5 @@ dev:
   password: 'SuperAdmin#123'
 
 external_systems:
-  hemis_base_url: 'https://hstudent.nuu.uz'
+  hemis_base_url: 'https://student.hemis.uz'
 
