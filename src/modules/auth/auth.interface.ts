@@ -1,4 +1,6 @@
 import { UserRoleEnum } from '../users/user.enum';
+import { IStudentEntity } from '../student/student.interface';
+import { IEmployerEntity } from '../employer/types/entity.type';
 
 export type TGrantType = 'PASSWORD' | 'REFRESH_TOKEN';
 
@@ -23,4 +25,14 @@ export interface IAuthTokenResponse {
   refresh_token: string;
   access_expires: number;
   refresh_expires: number;
+}
+
+export interface ICheckStudentOrEmployerResult {
+  student?: IStudentEntity;
+  employer?: IEmployerEntity;
+}
+
+export interface IHemisLoginRequestDto {
+  code: string;
+  redirect_url: string;
 }

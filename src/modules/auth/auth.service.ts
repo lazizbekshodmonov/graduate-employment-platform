@@ -17,6 +17,12 @@ import { StudentRepository } from '../student/student.repository';
 import { EmployerRepository } from '../employer/employer.repository';
 import { IEmployerEntity } from '../employer/types/entity.type';
 import { StatusEnum } from '../../common/enums/status.enum';
+import {
+  ICheckStudentOrEmployerResult,
+  IHemisLoginRequestDto,
+} from './auth.interface';
+import { HemisService } from '../../common/modules/hemis/hemis.service';
+import { StudentService } from '../student/student.service';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +30,8 @@ export class AuthService {
     private userRepository: UserRepository,
     private studentRepository: StudentRepository,
     private employerRepository: EmployerRepository,
+    private studentService: StudentService,
+    private hemisService: HemisService,
     private passwordService: PasswordService,
     private tokenService: TokenService,
     private logger: CustomLoggerService,
@@ -49,14 +57,10 @@ export class AuthService {
       if (!comparePassword) {
         throw new UsernameOrPasswordInvalidException();
       }
-      let student: IStudentEntity;
-      let employer: IEmployerEntity;
-      if (user.role === UserRoleEnum.STUDENT) {
-        student = await this.studentRepository.getByUserId(user.id);
-      }
-      if (user.role === UserRoleEnum.EMPLOYER) {
-        employer = await this.employerRepository.findByUserId(user.id);
-      }
+      const { student, employer } = await this.checkStudentOrEmployer(
+        user.id,
+        user.role,
+      );
       const accessToken = await this.tokenService.createAccessToken(
         user.id,
         user.role,
@@ -92,14 +96,10 @@ export class AuthService {
         throw new InvalidRefreshTokenException(authDto.refresh_token);
       }
 
-      let student: IStudentEntity;
-      let employer: IEmployerEntity;
-      if (user.role === UserRoleEnum.STUDENT) {
-        student = await this.studentRepository.getByUserId(user.id);
-      }
-      if (user.role === UserRoleEnum.EMPLOYER) {
-        employer = await this.employerRepository.findByUserId(user.id);
-      }
+      const { student, employer } = await this.checkStudentOrEmployer(
+        user.id,
+        user.role,
+      );
 
       const newAccessToken = await this.tokenService.createAccessToken(
         user.id,
@@ -124,5 +124,60 @@ export class AuthService {
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  async loginWithHemis(dto: IHemisLoginRequestDto): Promise<AuthTokenResponse> {
+    try {
+      const hemisToken = await this.hemisService.getAccessToken(
+        dto.code,
+        dto.redirect_url,
+      );
+      console.log(hemisToken);
+
+      const hemisUser = await this.hemisService.getUserInfo(
+        hemisToken.access_token,
+      );
+      console.log(hemisUser);
+
+      let student = await this.studentRepository.findByStudentId(hemisUser.id);
+
+      if (student) {
+        await this.studentService.createStudent(hemisUser, hemisToken);
+        student = await this.studentRepository.findByStudentId(hemisUser.id);
+      }
+
+      const accessToken = await this.tokenService.createAccessToken(
+        student.user.id,
+        UserRoleEnum.STUDENT,
+        null,
+        student.id,
+      );
+
+      const refreshToken = await this.tokenService.createRefreshToken(
+        student.user.id,
+        UserRoleEnum.STUDENT,
+        null,
+        student.id,
+      );
+      return new AuthTokenResponse(accessToken, refreshToken);
+    } catch (error) {
+      console.log(error?.response?.data);
+      this.logger.error(error);
+    }
+  }
+
+  private async checkStudentOrEmployer(
+    userId: number,
+    role: UserRoleEnum,
+  ): Promise<ICheckStudentOrEmployerResult> {
+    let student: IStudentEntity;
+    let employer: IEmployerEntity;
+    if (role === UserRoleEnum.STUDENT) {
+      student = await this.studentRepository.findByStudentId(userId);
+    }
+    if (role === UserRoleEnum.EMPLOYER) {
+      employer = await this.employerRepository.findByUserId(userId);
+    }
+    return { student, employer };
   }
 }
